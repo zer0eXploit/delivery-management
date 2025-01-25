@@ -1,3 +1,4 @@
+import { UnauthorizedException } from '@nestjs/common';
 import { Resolver, Mutation, Args } from '@nestjs/graphql';
 
 import { AuthService } from './auth.service';
@@ -17,7 +18,7 @@ export class AuthResolver {
       loginInput.password,
     );
 
-    if (!user) throw new Error('Invalid credentials');
+    if (!user) throw new UnauthorizedException();
 
     return this.authService.generateJWT(user);
   }

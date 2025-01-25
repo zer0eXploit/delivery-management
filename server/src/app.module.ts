@@ -38,7 +38,6 @@ import { RequestLoggerMiddleware } from './logger.middleware';
       formatError: (error) => {
         return {
           message: error.message,
-          status: error.extensions?.status,
           originalError: error.extensions?.originalError,
         };
       },
