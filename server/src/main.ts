@@ -9,6 +9,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: new ConsoleLogger({ json: false }),
   });
+
+  app.enableCors();
   app.useGlobalFilters(new CatchAllExceptionFilter());
   app.useGlobalFilters(new TypeOrmExceptionFilter());
   app.useGlobalPipes(new ValidationPipe({ disableErrorMessages: false }));
