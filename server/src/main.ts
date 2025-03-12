@@ -1,3 +1,4 @@
+// import express from 'express';
 import { NestFactory } from '@nestjs/core';
 import { ConsoleLogger, ValidationPipe } from '@nestjs/common';
 
@@ -9,6 +10,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: new ConsoleLogger({ json: false }),
   });
+
+  // app.use('/webhooks/stripe', express.raw({ type: 'application/json' }));
 
   app.enableCors();
   app.useGlobalFilters(new CatchAllExceptionFilter());

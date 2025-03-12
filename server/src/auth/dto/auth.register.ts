@@ -12,8 +12,8 @@ import { Role } from '../../enums/role.enum';
 @InputType()
 export class RegisterInput {
   @Field()
-  @MinLength(4)
-  @MaxLength(10)
+  @MinLength(3)
+  @MaxLength(255)
   name: string;
 
   @Field()
@@ -36,5 +36,5 @@ export class RegisterInput {
 
   @Field()
   @IsEnum(Role)
-  role: string;
+  role: Role;
 }

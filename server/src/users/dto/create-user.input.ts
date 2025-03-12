@@ -1,6 +1,8 @@
+import { Role } from '../../enums/role.enum';
+
 export class CreateUserInput {
   name: string;
-  role: string;
+  role: Role;
   email: string;
   password_hash: string;
 }

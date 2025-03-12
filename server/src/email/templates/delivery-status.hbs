@@ -1,0 +1,41 @@
+<div
+  style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8f9fa; border-radius: 8px;'
+>
+  <h2
+    style='color: #2c3e50; text-align: center; border-bottom: 2px solid #3498db; padding-bottom: 10px;'
+  >Delivery Status Update</h2>
+
+  <p style='color: #34495e; font-size: 16px;'>Hello
+    <span style='font-weight: bold;'>{{name}}</span>,</p>
+
+  <p style='color: #34495e; font-size: 16px;'>Your delivery with tracking ID
+    <span
+      style='font-family: monospace; background-color: #e8f4f8; padding: 2px 6px; border-radius: 4px;'
+    >{{tracking_id}}</span>
+    has been updated:</p>
+
+  <div
+    style='background-color: #ffffff; padding: 15px; border-left: 4px solid #3498db; margin: 15px 0; border-radius: 4px;'
+  >
+    <p style='margin: 0; font-size: 18px;'>Current Status:
+      <span style='color: #3498db; font-weight: bold;'>{{status}}</span></p>
+  </div>
+
+  <div
+    style='background-color: #ffffff; padding: 15px; border-radius: 4px; margin-top: 20px;'
+  >
+    <h3 style='color: #2c3e50; margin-top: 0;'>Delivery Details</h3>
+    <div style='margin: 10px 0;'>
+      <p style='margin: 5px 0; color: #7f8c8d;'>Pickup Address:</p>
+      <p
+        style='margin: 5px 0; color: #34495e; font-weight: 500;'
+      >{{pickup_address}}</p>
+    </div>
+    <div style='margin: 10px 0;'>
+      <p style='margin: 5px 0; color: #7f8c8d;'>Delivery Address:</p>
+      <p
+        style='margin: 5px 0; color: #34495e; font-weight: 500;'
+      >{{delivery_address}}</p>
+    </div>
+  </div>
+</div>

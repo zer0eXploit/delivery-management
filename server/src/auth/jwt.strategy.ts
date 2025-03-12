@@ -15,11 +15,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  validate(payload: JWTPayload) {
-    return {
-      role: payload.role,
-      userId: payload.sub,
-      email: payload.email,
-    };
+  async validate(payload: JWTPayload) {
+    const user = await this.usersService.findOneByEmail(payload.email);
+    if (!user) {
+      throw new Error(`Could not find user with email ${payload.email} in JWT`);
+    }
+
+    return user;
   }
 }

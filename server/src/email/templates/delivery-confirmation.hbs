@@ -1,0 +1,42 @@
+<div
+  style='max-width: 600px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif;'
+>
+  <h2
+    style='color: #2c3e50; text-align: center; border-bottom: 2px solid #3498db; padding-bottom: 10px;'
+  >Delivery Request Confirmation</h2>
+
+  <p style='color: #34495e; font-size: 16px;'>Hello
+    <span style='font-weight: bold;'>{{name}}</span>,</p>
+
+  <p style='color: #34495e; font-size: 16px;'>Your delivery request has been
+    confirmed with the following details:</p>
+
+  <div
+    style='background-color: #f8f9fa; border-radius: 8px; padding: 20px; margin: 15px 0;'
+  >
+    <ul style='list-style: none; padding: 0;'>
+      <li style='margin: 10px 0; color: #2c3e50;'>
+        <strong style='color: #3498db;'>Tracking ID:</strong>
+        {{tracking_id}}
+      </li>
+      <li style='margin: 10px 0; color: #2c3e50;'>
+        <strong style='color: #3498db;'>Pickup Address:</strong>
+        {{pickup_address}}
+      </li>
+      <li style='margin: 10px 0; color: #2c3e50;'>
+        <strong style='color: #3498db;'>Delivery Address:</strong>
+        {{delivery_address}}
+      </li>
+      <li style='margin: 10px 0; color: #2c3e50;'>
+        <strong style='color: #3498db;'>Total Cost:</strong>
+        ${{total_cost}}
+      </li>
+    </ul>
+  </div>
+
+  <p
+    style='color: #34495e; font-size: 16px; text-align: center; margin-top: 20px;'
+  >
+    You can track your delivery using the tracking ID above.
+  </p>
+</div>

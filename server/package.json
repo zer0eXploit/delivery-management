@@ -21,7 +21,9 @@
   },
   "dependencies": {
     "@apollo/server": "^4.11.3",
+    "@nestjs-modules/mailer": "^2.0.2",
     "@nestjs/apollo": "^13.0.2",
+    "@nestjs/axios": "^4.0.0",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.0",
     "@nestjs/core": "^11.0.1",
@@ -35,11 +37,15 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "graphql": "^16.10.0",
+    "handlebars": "^4.7.8",
+    "libphonenumber-js": "^1.11.20",
+    "nodemailer": "^6.10.0",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "pg": "^8.13.1",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
+    "stripe": "^17.7.0",
     "typeorm": "^0.3.20"
   },
   "devDependencies": {

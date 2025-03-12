@@ -6,7 +6,11 @@ import {
   UpdateDateColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { ObjectType, Field } from '@nestjs/graphql';
+import { ObjectType, Field, registerEnumType } from '@nestjs/graphql';
+
+import { Role } from '../../enums/role.enum';
+
+registerEnumType(Role, { name: 'Role' });
 
 @Entity()
 @ObjectType()
@@ -16,26 +20,26 @@ export class User {
   id: string;
 
   @Field()
-  @Column()
+  @Column({ type: 'varchar', length: 255 })
   name: string;
 
   @Field()
   @Index(['email'], { unique: true })
-  @Column()
+  @Column({ type: 'varchar', length: 255 })
   email: string;
 
   @Field()
-  @Column()
-  role: string;
+  @Column({ type: 'enum', enum: Role })
+  role: Role;
 
-  @Column()
+  @Column({ type: 'varchar', length: 255 })
   password_hash: string;
 
   @Field()
-  @CreateDateColumn({ type: 'timestamp with time zone' })
+  @CreateDateColumn({ type: 'timestamptz' })
   created_at: Date;
 
   @Field()
-  @UpdateDateColumn({ type: 'timestamp with time zone' })
+  @UpdateDateColumn({ type: 'timestamptz' })
   updated_at: Date;
 }
