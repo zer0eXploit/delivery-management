@@ -2,8 +2,49 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Address {
+  address_line: String!
+  contact_number: String!
+  created_at: DateTime!
+  deleted_at: DateTime
+  id: String!
+  latitude: Float!
+  longitude: Float!
+  township: Township!
+  updated_at: DateTime!
+  user: User!
+}
+
 type AuthResponse {
   access_token: String!
+}
+
+enum AvailabilityStatus {
+  AVAILABLE
+  UNAVAILABLE
+}
+
+input CreateAddressInput {
+  address_line: String!
+  contact_number: String!
+  latitude: Float!
+  longitude: Float!
+  township_id: String!
+  zip_code: String!
+}
+
+input CreateDeliveryRequestInput {
+  delivery_address_id: String!
+  pickup_address_id: String!
+  weight: Float!
+}
+
+input CreateTownshipInput {
+  code: String!
+  delivery_cost: Float!
+  name: String!
+  pickup_cost: Float!
+  zipcode: String!
 }
 
 """
@@ -11,17 +52,108 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type DeliveryJob {
+  created_at: DateTime!
+  delivery_person: DeliveryPerson!
+  delivery_request: DeliveryRequest!
+  earning: Float!
+  id: String!
+  job_type: JobType!
+  signature_url: String
+  status: JobStatus!
+  updated_at: DateTime!
+}
+
+type DeliveryPerson {
+  availability_status: AvailabilityStatus!
+  delivery_jobs: [DeliveryJob!]!
+  id: String!
+  telegram_id: String
+  user: User!
+}
+
+type DeliveryRequest {
+  created_at: DateTime!
+  customer: User!
+  delivery_address: Address!
+  delivery_cost: Float!
+  id: String!
+  pickup_address: Address!
+  pickup_cost: Float!
+  status: DeliveryStatus!
+  total_cost: Float!
+  tracking_code: String!
+  updated_at: DateTime!
+  weight: Float!
+}
+
+enum DeliveryStatus {
+  CANCELLED
+  DELIVERED
+  IN_TRANSIT
+  OUT_FOR_DELIVERY
+  PENDING
+  PICKED_UP
+  PICKUP_ASSIGNED
+}
+
+enum JobStatus {
+  ASSIGNED
+  CANCELLED
+  COMPLETED
+  IN_PROGRESS
+}
+
+enum JobType {
+  DELIVERY
+  PICKUP
+}
+
 input LoginInput {
   email: String!
   password: String!
 }
 
 type Mutation {
+  assignJob(deliveryPersonId: String!, deliveryRequestId: String!, jobType: JobType!): DeliveryJob!
+  createAddress(createAddressInput: CreateAddressInput!): Address!
+  createDeliveryRequest(createDeliveryRequestInput: CreateDeliveryRequestInput!): DeliveryRequest!
+  createPaymentIntent(deliveryRequestId: String!): Payment!
+  createTownship(createTownshipInput: CreateTownshipInput!): Township!
+  deleteAddress(id: String!): Address!
+  linkTelegram(telegramId: String!): DeliveryPerson!
   login(loginInput: LoginInput!): AuthResponse!
   register(registerInput: RegisterInput!): AuthResponse!
+  removeAddress(id: String!): Address!
+  updateAddress(updateAddressInput: UpdateAddressInput!): Address!
+  updateAvailability(status: AvailabilityStatus!): DeliveryPerson!
+  updateDeliveryStatus(description: String, id: String!, status: DeliveryStatus!): DeliveryRequest!
+  updateJobStatus(jobId: String!, signatureUrl: String, status: JobStatus!): DeliveryJob!
+  updateTownship(id: String!, updateTownshipInput: CreateTownshipInput!): Township!
+}
+
+type Payment {
+  amount: Float!
+  client_secret: String!
+  created_at: DateTime!
+  delivery_request: DeliveryRequest!
+  id: String!
+  status: String!
+  stripe_payment_intent_id: String!
+  updated_at: DateTime!
 }
 
 type Query {
+  address(id: String!): Address!
+  findAllDeliveryRequests(limit: Int! = 10, page: Int! = 1): [DeliveryRequest!]!
+  findMyDeliveryRequests(limit: Int! = 10, page: Int! = 1): [DeliveryRequest!]!
+  findOneDeliveryRequest(id: String!): DeliveryRequest!
+  getDeliveryTimeline(deliveryRequestId: String!): [Timeline!]!
+  getMyStatistics(endDate: DateTime, jobType: JobType, startDate: DateTime, status: JobStatus): Statistics!
+  me: User!
+  myAddresses: [Address!]!
+  township(id: String!): Township!
+  townships: [Township!]!
   users: [User!]!
 }
 
@@ -32,8 +164,40 @@ input RegisterInput {
   role: String!
 }
 
+type Statistics {
+  completed_jobs: Int!
+  jobs: [DeliveryJob!]!
+  total_earnings: Float!
+  total_jobs: Int!
+}
+
+type Timeline {
+  created_at: DateTime!
+  delivery_request: DeliveryRequest!
+  description: String
+  id: String!
+  status: DeliveryStatus!
+}
+
+type Township {
+  code: String!
+  delivery_cost: Float!
+  id: String!
+  name: String!
+  pickup_cost: Float!
+  zipcode: String!
+}
+
+input UpdateAddressInput {
+  address_line: String
+  contact_number: String!
+  id: String!
+  township_id: String
+}
+
 type User {
   created_at: DateTime!
+  delivery_person: DeliveryPerson
   email: String!
   id: String!
   name: String!

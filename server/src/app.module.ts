@@ -10,6 +10,8 @@ import { AuthModule } from './auth/auth.module';
 import { AppController } from './app.controller';
 import { UsersModule } from './users/users.module';
 import { EmailModule } from './email/email.module';
+import { WebhookModule } from './webhook/webhook.module';
+import { TelegramModule } from './telegram/telegram.module';
 import { PaymentsModule } from './payments/payments.module';
 import { AddressesModule } from './addresses/addresses.module';
 import { TownshipsModule } from './townships/townships.module';
@@ -51,6 +53,7 @@ import { RequestLoggerMiddleware } from './logger.middleware';
           DeliveryRequest,
         ],
         synchronize: configService.get('DATABASE_SYNC') === '1' || false,
+        ssl: { rejectUnauthorized: false },
       }),
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
@@ -64,9 +67,11 @@ import { RequestLoggerMiddleware } from './logger.middleware';
         };
       },
     }),
-    UsersModule,
     AuthModule,
+    UsersModule,
     EmailModule,
+    WebhookModule,
+    TelegramModule,
     PaymentsModule,
     AddressesModule,
     TownshipsModule,
