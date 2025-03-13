@@ -142,6 +142,17 @@ export class DeliveryRequestsService {
     });
   }
 
+  findOneByTrackingCode(tracking_code: string) {
+    return this.deliveryRequestRepository.findOne({
+      where: { tracking_code },
+      relations: {
+        customer: true,
+        pickup_address: { township: true },
+        delivery_address: { township: true },
+      },
+    });
+  }
+
   getTimeline(deliveryRequestId: string) {
     return this.timelineRepository.find({
       where: { delivery_request: { id: deliveryRequestId } },

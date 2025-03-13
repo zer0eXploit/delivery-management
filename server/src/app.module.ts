@@ -19,11 +19,13 @@ import { DeliveryPersonsModule } from './delivery-persons/delivery-persons.modul
 import { DeliveryRequestsModule } from './delivery-requests/delivery-requests.module';
 
 import { User } from './users/entities/user.entity';
+import { Message } from './chat/entities/message.entity';
 import { Payment } from './payments/entities/payment.entity';
 import { Address } from './addresses/entities/address.entity';
 import { Township } from './townships/entities/township.entity';
 import { Timeline } from './delivery-requests/entities/timeline.entity';
 import { DeliveryJob } from './delivery-persons/entities/delivery-job.entity';
+import { KnowledgeEmbedding } from './chat/entities/knowledge-embedding.entity';
 import { DeliveryPerson } from './delivery-persons/entities/delivery-person.entity';
 import { DeliveryRequest } from './delivery-requests/entities/delivery-request.entity';
 
@@ -46,11 +48,13 @@ import { RequestLoggerMiddleware } from './logger.middleware';
           User,
           Payment,
           Address,
+          Message,
           Timeline,
           Township,
           DeliveryJob,
           DeliveryPerson,
           DeliveryRequest,
+          KnowledgeEmbedding,
         ],
         synchronize: configService.get('DATABASE_SYNC') === '1' || false,
         ssl: { rejectUnauthorized: false },
