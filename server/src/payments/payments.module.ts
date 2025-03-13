@@ -16,5 +16,6 @@ import { DeliveryRequestsModule } from '../delivery-requests/delivery-requests.m
     DeliveryRequestsModule,
   ],
   providers: [PaymentsService, PaymentsResolver],
+  exports: [PaymentsService],
 })
 export class PaymentsModule {}

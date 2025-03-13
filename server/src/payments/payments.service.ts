@@ -52,15 +52,15 @@ export class PaymentsService {
   }
 
   async handleWebhook(signature: string, payload: Buffer) {
-    const webhookSecret = this.configService.get(
-      'STRIPE_WEBHOOK_SECRET',
+    const webhookSigningSecret = this.configService.get(
+      'STRIPE_WEBHOOK_SIGNING_SECRET',
     ) as string;
 
     try {
       const event = this.stripe.webhooks.constructEvent(
         payload,
         signature,
-        webhookSecret,
+        webhookSigningSecret,
       );
 
       if (event.type === 'payment_intent.succeeded') {
