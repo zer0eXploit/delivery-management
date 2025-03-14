@@ -247,6 +247,15 @@ export class DeliveryPersonsService {
     const deliveryPersonId = person.id;
     const query = this.deliveryJobRepository
       .createQueryBuilder('job')
+      .leftJoinAndSelect('job.delivery_request', 'delivery_request')
+      .leftJoinAndSelect('delivery_request.customer', 'customer')
+      .leftJoinAndSelect('delivery_request.pickup_address', 'pickup_address')
+      .leftJoinAndSelect(
+        'delivery_request.delivery_address',
+        'delivery_address',
+      )
+      .leftJoinAndSelect('pickup_address.township', 'pickup_township')
+      .leftJoinAndSelect('delivery_address.township', 'delivery_township')
       .where('job.delivery_person_id = :deliveryPersonId', {
         deliveryPersonId,
       });
@@ -261,7 +270,7 @@ export class DeliveryPersonsService {
     if (jobType) query.andWhere('job.job_type = :jobType', { jobType });
     if (status) query.andWhere('job.status = :status', { status });
 
-    const jobs = await query.getMany();
+    const jobs = await query.orderBy('job.created_at', 'DESC').getMany();
 
     return {
       total_jobs: jobs.length,
@@ -285,6 +294,15 @@ export class DeliveryPersonsService {
     const query = this.deliveryJobRepository
       .createQueryBuilder('job')
       .where('job.delivery_person_id = :deliveryPersonId', { deliveryPersonId })
+      .leftJoinAndSelect('job.delivery_request', 'delivery_request')
+      .leftJoinAndSelect('delivery_request.customer', 'customer')
+      .leftJoinAndSelect('delivery_request.pickup_address', 'pickup_address')
+      .leftJoinAndSelect(
+        'delivery_request.delivery_address',
+        'delivery_address',
+      )
+      .leftJoinAndSelect('pickup_address.township', 'pickup_township')
+      .leftJoinAndSelect('delivery_address.township', 'delivery_township')
       .orderBy('job.created_at', 'DESC');
 
     if (status) {
