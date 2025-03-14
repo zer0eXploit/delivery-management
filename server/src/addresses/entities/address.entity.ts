@@ -36,6 +36,10 @@ export class Address {
   @Column({ type: 'text' })
   contact_number: string;
 
+  @Field()
+  @Column({ type: 'text' })
+  contact_name: string;
+
   @Field(() => Township)
   @ManyToOne(() => Township)
   @JoinColumn({ name: 'township_id' })

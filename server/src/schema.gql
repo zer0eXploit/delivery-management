@@ -4,6 +4,7 @@
 
 type Address {
   address_line: String!
+  contact_name: String!
   contact_number: String!
   created_at: DateTime!
   deleted_at: DateTime
@@ -26,6 +27,7 @@ enum AvailabilityStatus {
 
 input CreateAddressInput {
   address_line: String!
+  contact_name: String!
   contact_number: String!
   latitude: Float!
   longitude: Float!
@@ -35,6 +37,7 @@ input CreateAddressInput {
 
 input CreateDeliveryRequestInput {
   delivery_address_id: String!
+  payment_method: String!
   pickup_address_id: String!
   weight: Float!
 }
@@ -78,6 +81,7 @@ type DeliveryRequest {
   delivery_address: Address!
   delivery_cost: Float!
   id: String!
+  payment_method: String!
   pickup_address: Address!
   pickup_cost: Float!
   status: DeliveryStatus!
@@ -90,7 +94,6 @@ type DeliveryRequest {
 enum DeliveryStatus {
   CANCELLED
   DELIVERED
-  IN_TRANSIT
   OUT_FOR_DELIVERY
   PENDING
   PICKED_UP
@@ -101,7 +104,7 @@ enum JobStatus {
   ASSIGNED
   CANCELLED
   COMPLETED
-  IN_PROGRESS
+  ON_WAY
 }
 
 enum JobType {
@@ -145,10 +148,13 @@ type Payment {
 
 type Query {
   address(id: String!): Address!
-  findAllDeliveryRequests(limit: Int! = 10, page: Int! = 1): [DeliveryRequest!]!
-  findMyDeliveryRequests(limit: Int! = 10, page: Int! = 1): [DeliveryRequest!]!
+  findAllDeliveryRequests: [DeliveryRequest!]!
+  findMyDeliveryRequests: [DeliveryRequest!]!
   findOneDeliveryRequest(id: String!): DeliveryRequest!
+  getAllDeliverers: [DeliveryPerson!]!
   getDeliveryTimeline(deliveryRequestId: String!): [Timeline!]!
+  getJob(jobId: String!): DeliveryJob!
+  getMyJobs(status: JobStatus): [DeliveryJob!]!
   getMyStatistics(endDate: DateTime, jobType: JobType, startDate: DateTime, status: JobStatus): Statistics!
   me: User!
   myAddresses: [Address!]!
@@ -190,6 +196,7 @@ type Township {
 
 input UpdateAddressInput {
   address_line: String
+  contact_name: String!
   contact_number: String!
   id: String!
   township_id: String

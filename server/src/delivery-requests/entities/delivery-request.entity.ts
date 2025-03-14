@@ -59,7 +59,7 @@ export class DeliveryRequest {
   @Column('numeric', { precision: 10, scale: 2 })
   delivery_cost: number;
 
-  @Field(() => PaymentMethod)
+  @Field()
   @Column({ type: 'enum', enum: PaymentMethod })
   payment_method: PaymentMethod;
 

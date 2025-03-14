@@ -1,5 +1,5 @@
 import { UseGuards } from '@nestjs/common';
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 
 import { User } from '../users/entities/user.entity';
 import { Timeline } from './entities/timeline.entity';
@@ -39,21 +39,14 @@ export class DeliveryRequestsResolver {
   @Query(() => [DeliveryRequest])
   @UseGuards(GqlAuthGuard, RolesGuard)
   @Roles(Role.Admin)
-  findAllDeliveryRequests(
-    @Args('page', { type: () => Int, defaultValue: 1 }) page: number,
-    @Args('limit', { type: () => Int, defaultValue: 10 }) limit: number,
-  ) {
-    return this.deliveryRequestsService.findAll(page, limit);
+  findAllDeliveryRequests() {
+    return this.deliveryRequestsService.findAll();
   }
 
   @Query(() => [DeliveryRequest])
   @UseGuards(GqlAuthGuard)
-  findMyDeliveryRequests(
-    @CurrentUser() user: User,
-    @Args('page', { type: () => Int, defaultValue: 1 }) page: number,
-    @Args('limit', { type: () => Int, defaultValue: 10 }) limit: number,
-  ) {
-    return this.deliveryRequestsService.findAllByUser(user.id, page, limit);
+  findMyDeliveryRequests(@CurrentUser() user: User) {
+    return this.deliveryRequestsService.findAllByUser(user.id);
   }
 
   @Query(() => DeliveryRequest)

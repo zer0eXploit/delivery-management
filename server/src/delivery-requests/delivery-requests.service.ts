@@ -52,7 +52,18 @@ export class DeliveryRequestsService {
 
     const pickup_cost = Number(pickup_address.township.pickup_cost);
     const delivery_cost = Number(delivery_address.township.delivery_cost);
-    const total_cost = pickup_cost + delivery_cost;
+
+    // always count 1kg as minimum
+    if (createDeliveryRequestInput.weight < 1) {
+      createDeliveryRequestInput.weight = 1;
+    }
+
+    const total_cost = Number(
+      (
+        (pickup_cost + delivery_cost) *
+        createDeliveryRequestInput.weight
+      ).toFixed(2),
+    );
 
     const tracking_code = await this.trackingCodeGenerator.generateTrackingCode(
       pickup_address.township.code,
@@ -107,10 +118,8 @@ export class DeliveryRequestsService {
     return deliveryRequest;
   }
 
-  findAll(page = 1, limit = 10) {
+  findAll() {
     return this.deliveryRequestRepository.find({
-      skip: (page - 1) * limit,
-      take: limit,
       relations: {
         customer: true,
         pickup_address: { township: true },
@@ -120,11 +129,9 @@ export class DeliveryRequestsService {
     });
   }
 
-  findAllByUser(userId: string, page = 1, limit = 10) {
+  findAllByUser(userId: string) {
     return this.deliveryRequestRepository.find({
       where: { customer: { id: userId } },
-      skip: (page - 1) * limit,
-      take: limit,
       relations: {
         customer: true,
         pickup_address: { township: true },

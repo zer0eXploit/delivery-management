@@ -22,4 +22,8 @@ export class UpdateAddressInput {
     message: 'Please provide a valid myanmar phone number',
   })
   contact_number: string;
+
+  @Field()
+  @IsString()
+  contact_name: string;
 }

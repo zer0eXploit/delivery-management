@@ -51,12 +51,7 @@ export class DeliveryJob {
   status: JobStatus;
 
   @Field({ nullable: true })
-  @Column({
-    type: 'text',
-    nullable: true,
-    default:
-      'https://images.unsplash.com/photo-1589330694653-ded6df03f754?q=80&w=500',
-  })
+  @Column({ type: 'text', nullable: true })
   signature_url: string;
 
   @Field()

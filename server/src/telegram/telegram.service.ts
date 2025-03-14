@@ -348,4 +348,17 @@ export class TelegramService implements OnModuleInit {
       throw error;
     }
   }
+
+  public async sendMessage(
+    telegram_id: string,
+    message: string,
+  ): Promise<boolean> {
+    try {
+      await this.bot.api.sendMessage(telegram_id, message);
+      return true;
+    } catch (error) {
+      this.logger.error(`Failed to send message to ${telegram_id}:`, error);
+      return false;
+    }
+  }
 }

@@ -16,6 +16,7 @@ import { DeliveryPerson } from './entities/delivery-person.entity';
 import { DeliveryPersonsService } from './delivery-persons.service';
 
 import { Roles } from '../auth/roles.decorater';
+import { RolesGuard } from '../auth/roles.guard';
 import { GqlAuthGuard } from '../auth/gql-auth.guard';
 import { CurrentUser } from '../auth/current-user.decorator';
 
@@ -46,7 +47,7 @@ export class DeliveryPersonsResolver {
   ) {}
 
   @Mutation(() => DeliveryPerson)
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(GqlAuthGuard, RolesGuard)
   @Roles(Role.Deliverer)
   linkTelegram(
     @CurrentUser() user: DeliveryPerson,
@@ -56,7 +57,7 @@ export class DeliveryPersonsResolver {
   }
 
   @Mutation(() => DeliveryPerson)
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(GqlAuthGuard, RolesGuard)
   @Roles(Role.Deliverer)
   updateAvailability(
     @CurrentUser() user: DeliveryPerson,
@@ -67,7 +68,7 @@ export class DeliveryPersonsResolver {
   }
 
   @Mutation(() => DeliveryJob)
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(GqlAuthGuard, RolesGuard)
   @Roles(Role.Admin)
   assignJob(
     @Args('deliveryPersonId') deliveryPersonId: string,
@@ -82,7 +83,7 @@ export class DeliveryPersonsResolver {
   }
 
   @Mutation(() => DeliveryJob)
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(GqlAuthGuard, RolesGuard)
   @Roles(Role.Deliverer)
   updateJobStatus(
     @Args('jobId') jobId: string,
@@ -97,7 +98,7 @@ export class DeliveryPersonsResolver {
   }
 
   @Query(() => Statistics)
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(GqlAuthGuard, RolesGuard)
   @Roles(Role.Deliverer)
   getMyStatistics(
     @CurrentUser() user: DeliveryPerson,
@@ -114,5 +115,30 @@ export class DeliveryPersonsResolver {
       jobType,
       status,
     );
+  }
+
+  @Query(() => [DeliveryJob])
+  @UseGuards(GqlAuthGuard, RolesGuard)
+  @Roles(Role.Deliverer)
+  getMyJobs(
+    @CurrentUser() user: DeliveryPerson,
+    @Args('status', { type: () => JobStatus, nullable: true })
+    status?: JobStatus,
+  ) {
+    return this.deliveryPersonsService.getAssignedJobs(user.id, status);
+  }
+
+  @Query(() => DeliveryJob)
+  @UseGuards(GqlAuthGuard, RolesGuard)
+  @Roles(Role.Deliverer)
+  getJob(@CurrentUser() user: DeliveryPerson, @Args('jobId') jobId: string) {
+    return this.deliveryPersonsService.getJobById(user.id, jobId);
+  }
+
+  @Query(() => [DeliveryPerson])
+  @UseGuards(GqlAuthGuard, RolesGuard)
+  @Roles(Role.Admin)
+  getAllDeliverers() {
+    return this.deliveryPersonsService.getAllDeliverers();
   }
 }

@@ -22,6 +22,10 @@ export class CreateAddressInput {
   contact_number: string;
 
   @Field()
+  @IsString()
+  contact_name: string;
+
+  @Field()
   @IsNumber()
   latitude: number;
 
