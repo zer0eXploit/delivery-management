@@ -10,6 +10,7 @@ import { DeliveryRequest } from './entities/delivery-request.entity';
 import { EmailService } from '../email/email.service';
 import { TrackingCodeGenerator } from './tracking-code.generator';
 
+import { PaymentMethod } from '../enums/payment-methods.enum';
 import { DeliveryStatus } from '../enums/delivery-status.enum';
 
 import { CreateDeliveryRequestInput } from './dto/create-delivery-request.input';
@@ -63,6 +64,8 @@ export class DeliveryRequestsService {
       pickup_address,
       delivery_address,
       weight: createDeliveryRequestInput.weight,
+      payment_method:
+        createDeliveryRequestInput.payment_method as PaymentMethod,
       pickup_cost,
       delivery_cost,
       total_cost,

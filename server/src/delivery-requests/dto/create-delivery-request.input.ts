@@ -1,5 +1,7 @@
 import { InputType, Field } from '@nestjs/graphql';
-import { IsUUID, IsNumber, Min } from 'class-validator';
+import { IsUUID, IsNumber, Min, IsEnum } from 'class-validator';
+
+import { PaymentMethod } from '../../enums/payment-methods.enum';
 
 @InputType()
 export class CreateDeliveryRequestInput {
@@ -15,4 +17,8 @@ export class CreateDeliveryRequestInput {
   @IsNumber()
   @Min(0.1)
   weight: number;
+
+  @Field()
+  @IsEnum(PaymentMethod)
+  payment_method: string;
 }

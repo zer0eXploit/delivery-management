@@ -12,6 +12,7 @@ import { ObjectType, Field, registerEnumType } from '@nestjs/graphql';
 import { User } from '../../users/entities/user.entity';
 import { Address } from '../../addresses/entities/address.entity';
 
+import { PaymentMethod } from '../../enums/payment-methods.enum';
 import { DeliveryStatus } from '../../enums/delivery-status.enum';
 
 registerEnumType(DeliveryStatus, { name: 'DeliveryStatus' });
@@ -57,6 +58,10 @@ export class DeliveryRequest {
   @Field()
   @Column('numeric', { precision: 10, scale: 2 })
   delivery_cost: number;
+
+  @Field(() => PaymentMethod)
+  @Column({ type: 'enum', enum: PaymentMethod })
+  payment_method: PaymentMethod;
 
   @Field(() => DeliveryStatus)
   @Column({
