@@ -1,0 +1,49 @@
+<div
+  style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8f9fa; border-radius: 8px;'
+>
+  <h2
+    style='color: #2c3e50; text-align: center; border-bottom: 2px solid #3498db; padding-bottom: 10px;'
+  >Delevery Job Cancellation Notification</h2>
+
+  <p style='color: #34495e; font-size: 16px;'>Hello
+    <span style='font-weight: bold;'>{{adminName}}</span>,</p>
+
+  <p style='color: #34495e; font-size: 16px;'>Delivery with tracking ID
+    <span
+      style='font-family: monospace; background-color: #e8f4f8; padding: 2px 6px; border-radius: 4px;'
+    >{{trackingCode}}</span>
+    has been cancelled:</p>
+
+  <div
+    style='background-color: #ffffff; padding: 15px; border-radius: 4px; margin-top: 20px;'
+  >
+    <h3 style='color: #2c3e50; margin-top: 0;'>Delivery Details</h3>
+    <div style='margin: 10px 0;'>
+      <p style='margin: 5px 0; color: #7f8c8d;'>Job Type:</p>
+      <p
+        style='margin: 5px 0; color: #34495e; font-weight: 500;'
+      >{{jobType}}</p>
+    </div>
+    <div style='margin: 10px 0;'>
+      <p style='margin: 5px 0; color: #7f8c8d;'>Delivery Person:</p>
+      <p
+        style='margin: 5px 0; color: #34495e; font-weight: 500;'
+      >{{deliveryPerson}}</p>
+    </div>
+    <div style='margin: 10px 0;'>
+      <p style='margin: 5px 0; color: #7f8c8d;'>Cancellation Time:</p>
+      <p
+        style='margin: 5px 0; color: #34495e; font-weight: 500;'
+      >{{cancellationTime}}</p>
+    </div>
+    <div style='margin: 10px 0;'>
+      <p style='margin: 5px 0; color: #7f8c8d;'>Delivery Job ID:</p>
+      <p style='margin: 5px 0; color: #34495e; font-weight: 500;'><span
+          style='font-family: monospace; background-color: #e8f4f8; padding: 2px 6px; border-radius: 4px;'
+        >{{jobId}}</span></p>
+    </div>
+  </div>
+
+  <p style='color: #34495e; font-size: 16px; margin-top: 20px;'>Please review
+    this cancellation in the admin dashboard.</p>
+</div>

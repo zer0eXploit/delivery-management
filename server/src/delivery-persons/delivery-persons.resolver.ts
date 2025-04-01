@@ -135,6 +135,13 @@ export class DeliveryPersonsResolver {
     return this.deliveryPersonsService.getJobById(user.id, jobId);
   }
 
+  @Mutation(() => DeliveryJob)
+  @UseGuards(GqlAuthGuard, RolesGuard)
+  @Roles(Role.Deliverer)
+  cancelJob(@CurrentUser() user: DeliveryPerson, @Args('jobId') jobId: string) {
+    return this.deliveryPersonsService.cancelJob(user.id, jobId);
+  }
+
   @Query(() => [DeliveryPerson])
   @UseGuards(GqlAuthGuard, RolesGuard)
   @Roles(Role.Admin)

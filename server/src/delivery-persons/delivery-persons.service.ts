@@ -1,6 +1,10 @@
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { User } from '../users/entities/user.entity';
 import { EmailService } from '../email/email.service';
@@ -10,6 +14,7 @@ import { DeliveryPerson } from './entities/delivery-person.entity';
 import { Timeline } from '../delivery-requests/entities/timeline.entity';
 import { DeliveryRequest } from '../delivery-requests/entities/delivery-request.entity';
 
+import { Role } from '../enums/role.enum';
 import { JobType } from '../enums/job-type.enum';
 import { JobStatus } from '../enums/delivery-job-status.enum';
 import { DeliveryStatus } from '../enums/delivery-status.enum';
@@ -18,6 +23,8 @@ import { AvailabilityStatus } from '../enums/availability-status.enum';
 @Injectable()
 export class DeliveryPersonsService {
   constructor(
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
     @InjectRepository(DeliveryPerson)
     private deliveryPersonRepository: Repository<DeliveryPerson>,
     @InjectRepository(DeliveryJob)
@@ -72,7 +79,11 @@ export class DeliveryPersonsService {
     jobType: JobType,
   ) {
     const existingJob = await this.deliveryJobRepository.findOne({
-      where: { delivery_request: { id: deliveryRequestId }, job_type: jobType },
+      where: {
+        job_type: jobType,
+        status: JobStatus.ASSIGNED,
+        delivery_request: { id: deliveryRequestId },
+      },
     });
 
     if (existingJob) {
@@ -330,6 +341,52 @@ export class DeliveryPersonsService {
       .getOne();
 
     if (!job) throw new NotFoundException('Job not found or unauthorized');
+
+    return job;
+  }
+
+  async cancelJob(userId: string, jobId: string) {
+    const job = await this.deliveryJobRepository.findOne({
+      where: {
+        id: jobId,
+        delivery_person: { user: { id: userId } },
+      },
+      relations: ['delivery_request', 'delivery_person.user'],
+    });
+
+    if (!job) {
+      throw new NotFoundException('Job not found');
+    }
+
+    if (job.status === JobStatus.COMPLETED) {
+      throw new BadRequestException('Cannot cancel a completed job');
+    }
+
+    job.status = JobStatus.CANCELLED;
+
+    if (job.job_type === JobType.PICKUP) {
+      job.delivery_request.status = DeliveryStatus.PENDING;
+    } else if (job.job_type === JobType.DELIVERY) {
+      job.delivery_request.status = DeliveryStatus.PICKED_UP;
+    }
+
+    await this.deliveryRequestRepository.save(job.delivery_request);
+    await this.deliveryJobRepository.save(job);
+
+    const admins = await this.userRepository.find({
+      where: { role: Role.Admin },
+    });
+
+    for (const admin of admins) {
+      await this.emailService.sendAdminNotification(admin.email, {
+        jobId: job.id,
+        jobType: job.job_type,
+        deliveryPerson: job.delivery_person.user.name,
+        trackingCode: job.delivery_request.tracking_code,
+        adminName: admin.name,
+        cancellationTime: new Date().toLocaleString(),
+      });
+    }
 
     return job;
   }

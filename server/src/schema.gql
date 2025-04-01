@@ -119,6 +119,7 @@ input LoginInput {
 
 type Mutation {
   assignJob(deliveryPersonId: String!, deliveryRequestId: String!, jobType: JobType!): DeliveryJob!
+  cancelJob(jobId: String!): DeliveryJob!
   createAddress(createAddressInput: CreateAddressInput!): Address!
   createDeliveryRequest(createDeliveryRequestInput: CreateDeliveryRequestInput!): DeliveryRequest!
   createPaymentIntent(deliveryRequestId: String!): Payment!

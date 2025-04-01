@@ -5,6 +5,15 @@ import { DeliveryRequest } from '../delivery-requests/entities/delivery-request.
 
 @Injectable()
 export class EmailService {
+  async sendAdminNotification(email: string, context: Record<string, any>) {
+    await this.mailerService.sendMail({
+      context,
+      to: email,
+      subject: 'Job Cancellation Notification',
+      template: 'job-cancelled',
+    });
+  }
+
   constructor(private mailerService: MailerService) {}
 
   async sendDeliveryStatusUpdate(deliveryRequest: DeliveryRequest) {

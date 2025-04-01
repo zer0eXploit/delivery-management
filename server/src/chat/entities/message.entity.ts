@@ -13,7 +13,7 @@ export class Message {
   @Column({ type: 'varchar', length: 255 })
   telegram_id: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'text' })
   content: string;
 
   @Column({ type: 'varchar', length: 30 })
