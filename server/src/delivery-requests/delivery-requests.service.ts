@@ -1,6 +1,7 @@
 import { Repository } from 'typeorm';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { isUUID } from 'class-validator';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { User } from '../users/entities/user.entity';
 import { Timeline } from './entities/timeline.entity';
@@ -163,10 +164,15 @@ export class DeliveryRequestsService {
     });
   }
 
-  getTimeline(deliveryRequestId: string) {
+  async getTimeline(identifier: string) {
+    const where = isUUID(identifier, 4)
+      ? { delivery_request: { id: identifier } }
+      : { delivery_request: { tracking_code: identifier } };
+
     return this.timelineRepository.find({
-      where: { delivery_request: { id: deliveryRequestId } },
+      where,
       order: { created_at: 'DESC' },
+      relations: ['delivery_request'],
     });
   }
 }
