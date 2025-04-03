@@ -51,4 +51,13 @@ export class EmailService {
       },
     });
   }
+
+  async send2FACode(email: string, context: Record<string, any>) {
+    await this.mailerService.sendMail({
+      to: email,
+      subject: '2FA Verification Code',
+      template: 'two-factor-code',
+      context,
+    });
+  }
 }

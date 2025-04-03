@@ -12,11 +12,16 @@ import { RegisterInput } from './dto/auth.register';
 import { GqlAuthGuard } from './gql-auth.guard';
 import { CurrentUser } from './current-user.decorator';
 
+import {
+  TwoFactorResponse,
+  TwoFactorVerifyInput,
+} from './two-factor/dto/two-factor.dto';
+
 @Resolver()
 export class AuthResolver {
   constructor(private readonly authService: AuthService) {}
 
-  @Mutation(() => AuthResponse)
+  @Mutation(() => TwoFactorResponse)
   async login(@Args('loginInput') loginInput: LoginInput) {
     const user = await this.authService.validateUser(
       loginInput.email,
@@ -25,7 +30,22 @@ export class AuthResolver {
 
     if (!user) throw new UnauthorizedException();
 
-    return this.authService.generateJWT(user);
+    return { success: true };
+  }
+
+  @Mutation(() => AuthResponse)
+  async verifyTwoFactor(
+    @Args('loginInput') loginInput: LoginInput,
+    @Args('twoFactorInput') twoFactorInput: TwoFactorVerifyInput,
+  ) {
+    const user = await this.authService.findUserForVerification(
+      loginInput.email,
+      loginInput.password,
+    );
+
+    if (!user) throw new UnauthorizedException('Invalid credentials');
+
+    return this.authService.verifyTwoFactor(user, twoFactorInput.code);
   }
 
   @Mutation(() => AuthResponse)

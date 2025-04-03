@@ -15,6 +15,7 @@ import { TelegramModule } from './telegram/telegram.module';
 import { PaymentsModule } from './payments/payments.module';
 import { AddressesModule } from './addresses/addresses.module';
 import { TownshipsModule } from './townships/townships.module';
+import { TwoFactorModule } from './auth/two-factor/two-factor.module';
 import { DeliveryPersonsModule } from './delivery-persons/delivery-persons.module';
 import { DeliveryRequestsModule } from './delivery-requests/delivery-requests.module';
 
@@ -27,6 +28,7 @@ import { Timeline } from './delivery-requests/entities/timeline.entity';
 import { DeliveryJob } from './delivery-persons/entities/delivery-job.entity';
 import { KnowledgeEmbedding } from './chat/entities/knowledge-embedding.entity';
 import { DeliveryPerson } from './delivery-persons/entities/delivery-person.entity';
+import { TwoFactorToken } from './auth/two-factor/entities/two-factor-token.entity';
 import { DeliveryRequest } from './delivery-requests/entities/delivery-request.entity';
 
 import { RequestLoggerMiddleware } from './logger.middleware';
@@ -53,6 +55,7 @@ import { RequestLoggerMiddleware } from './logger.middleware';
           Township,
           DeliveryJob,
           DeliveryPerson,
+          TwoFactorToken,
           DeliveryRequest,
           KnowledgeEmbedding,
         ],
@@ -78,6 +81,7 @@ import { RequestLoggerMiddleware } from './logger.middleware';
     TelegramModule,
     PaymentsModule,
     AddressesModule,
+    TwoFactorModule,
     TownshipsModule,
     DeliveryPersonsModule,
     DeliveryRequestsModule,

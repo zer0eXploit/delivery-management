@@ -126,7 +126,7 @@ type Mutation {
   createTownship(createTownshipInput: CreateTownshipInput!): Township!
   deleteAddress(id: String!): Address!
   linkTelegram(telegramId: String!): DeliveryPerson!
-  login(loginInput: LoginInput!): AuthResponse!
+  login(loginInput: LoginInput!): TwoFactorResponse!
   register(registerInput: RegisterInput!): AuthResponse!
   removeAddress(id: String!): Address!
   updateAddress(updateAddressInput: UpdateAddressInput!): Address!
@@ -134,6 +134,7 @@ type Mutation {
   updateDeliveryStatus(description: String, id: String!, status: DeliveryStatus!): DeliveryRequest!
   updateJobStatus(jobId: String!, signatureUrl: String, status: JobStatus!): DeliveryJob!
   updateTownship(id: String!, updateTownshipInput: CreateTownshipInput!): Township!
+  verifyTwoFactor(loginInput: LoginInput!, twoFactorInput: TwoFactorVerifyInput!): AuthResponse!
 }
 
 type Payment {
@@ -193,6 +194,15 @@ type Township {
   name: String!
   pickup_cost: Float!
   zipcode: String!
+}
+
+type TwoFactorResponse {
+  access_token: String
+  success: Boolean!
+}
+
+input TwoFactorVerifyInput {
+  code: String!
 }
 
 input UpdateAddressInput {

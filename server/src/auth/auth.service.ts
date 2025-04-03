@@ -1,9 +1,14 @@
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
-import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { User } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
+import { TwoFactorService } from './two-factor/two-factor.service';
 import { DeliveryPersonsService } from '../delivery-persons/delivery-persons.service';
 
 import { RegisterInput } from './dto/auth.register';
@@ -16,6 +21,7 @@ export class AuthService {
   constructor(
     private jwtService: JwtService,
     private usersService: UsersService,
+    private twoFactorService: TwoFactorService,
     private deliveryPersonsService: DeliveryPersonsService,
   ) {}
 
@@ -33,10 +39,28 @@ export class AuthService {
     const user = await this.usersService.findOneByEmail(email);
 
     if (user && (await bcrypt.compare(password, user.password_hash))) {
+      // Generate and send 2FA token
+      await this.twoFactorService.generateAndSendToken(user);
       return user;
     }
 
     return null;
+  }
+
+  async findUserForVerification(email: string, password: string) {
+    const user = await this.usersService.findOneByEmail(email);
+    if (user && (await bcrypt.compare(password, user.password_hash))) {
+      return user;
+    }
+    return null;
+  }
+
+  async verifyTwoFactor(user: User, code: string) {
+    const isValid = await this.twoFactorService.verifyToken(user, code);
+    if (!isValid) {
+      throw new UnauthorizedException('Invalid verification code');
+    }
+    return this.generateJWT(user);
   }
 
   async register(user: RegisterInput) {
