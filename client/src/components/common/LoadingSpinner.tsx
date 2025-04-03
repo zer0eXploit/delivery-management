@@ -16,3 +16,17 @@ export const LoadingSpinner = ({ size = "large" }: SpinnerProps) => {
     </div>
   );
 };
+
+export const InlineLoadingSpinner = ({ size = "large" }: SpinnerProps) => {
+  return (
+    <div
+      style={{
+        alignItems: "center",
+        display: "inline-flex",
+        justifyContent: "center",
+      }}
+    >
+      <Spin size={size} />
+    </div>
+  );
+};
