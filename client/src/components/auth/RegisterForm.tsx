@@ -1,10 +1,11 @@
 import { z } from "zod";
 import { Form, Input, Button, Alert } from "antd";
+import { useSearchParams } from "react-router-dom";
 
 const RegisterPayload = z.object({
   name: z.string().min(1, "Name is required"),
   email: z.string().email("Invalid email address"),
-  role: z.literal("customer"),
+  role: z.enum(["customer", "deliverer"]),
   password: z
     .string()
     .min(8, "Password must be at least 8 characters")
@@ -25,6 +26,7 @@ interface RegisterFormProps {
 }
 
 export function RegisterForm({ onSubmit, error, loading }: RegisterFormProps) {
+  const [searchParams] = useSearchParams();
   const [form] = Form.useForm<RegisterFormValues>();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -48,9 +50,11 @@ export function RegisterForm({ onSubmit, error, loading }: RegisterFormProps) {
 
   const handleSubmit = async (values: RegisterFormValues) => {
     try {
+      const role =
+        searchParams.get("as") === "deliverer" ? "deliverer" : "customer";
       const validatedData = RegisterPayload.parse({
         ...values,
-        role: "customer",
+        role,
       });
       await onSubmit(validatedData);
     } catch (error) {

@@ -9,19 +9,31 @@ interface AuthState {
   checkAuth: () => Promise<void>;
 }
 
-// Mock API calls
-const mockValidateToken = async (token: string) => {
-  // Simulate API delay
-  await new Promise((resolve) => setTimeout(resolve, 2000));
-  return token === localStorage.getItem("token");
-};
+const validateToken = async (token: string) => {
+  const response = await fetch(import.meta.env.VITE_GQL_HOST + "/graphql", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      query: `
+        query {
+          me {
+            id
+          }
+        }
+      `,
+    }),
+  });
 
-const mockRefreshToken = async () => {
-  // Simulate API delay
-  await new Promise((resolve) => setTimeout(resolve, 500));
-  return {
-    access_token: "new_mock_token",
-  };
+  if (!response.ok) return false;
+
+  const data = await response.json();
+  if (data.errors) return false;
+
+  console.log(data);
+  return true;
 };
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -52,15 +64,10 @@ export const useAuthStore = create<AuthState>((set) => ({
         return;
       }
 
-      const isValid = await mockValidateToken(token);
-      if (isValid) {
-        set({ isAuthenticated: true });
-      } else {
-        // Token is invalid, try to refresh
-        const { access_token } = await mockRefreshToken();
-        set({ isAuthenticated: true, accessToken: access_token });
-        localStorage.setItem("token", access_token);
-      }
+      const isValid = await validateToken(token);
+
+      if (isValid) set({ isAuthenticated: true });
+      else throw new Error("Invalid token");
     } catch (error) {
       console.error(error);
       set({ isAuthenticated: false });
