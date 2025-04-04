@@ -100,6 +100,11 @@ enum DeliveryStatus {
   PICKUP_ASSIGNED
 }
 
+type DeliveryTrend {
+  deliveries: Int!
+  month: String!
+}
+
 enum JobStatus {
   ASSIGNED
   CANCELLED
@@ -148,8 +153,16 @@ type Payment {
   updated_at: DateTime!
 }
 
+type PerformanceMetrics {
+  completionRate: Float!
+  totalDeliveries: Int!
+}
+
 type Query {
   address(id: String!): Address!
+  deliveryPerformanceMetrics(endDate: DateTime, startDate: DateTime): PerformanceMetrics!
+  deliveryStatusDistribution(endDate: DateTime, startDate: DateTime): [StatusDistribution!]!
+  deliveryTrends: [DeliveryTrend!]!
   findAllDeliveryRequests: [DeliveryRequest!]!
   findMyDeliveryRequests: [DeliveryRequest!]!
   findOneDeliveryRequest(id: String!): DeliveryRequest!
@@ -160,6 +173,9 @@ type Query {
   getMyStatistics(endDate: DateTime, jobType: JobType, startDate: DateTime, status: JobStatus): Statistics!
   me: User!
   myAddresses: [Address!]!
+  revenueByTownship(endDate: DateTime, startDate: DateTime): [TownshipRevenue!]!
+  topDeliveryPersons(endDate: DateTime, startDate: DateTime): [TopDeliveryPerson!]!
+  totalRevenue(endDate: DateTime, startDate: DateTime): Float!
   township(id: String!): Township!
   townships: [Township!]!
   users: [User!]!
@@ -179,12 +195,22 @@ type Statistics {
   total_jobs: Int!
 }
 
+type StatusDistribution {
+  status: String!
+  total: Int!
+}
+
 type Timeline {
   created_at: DateTime!
   delivery_request: DeliveryRequest!
   description: String
   id: String!
   status: DeliveryStatus!
+}
+
+type TopDeliveryPerson {
+  name: String!
+  total: Int!
 }
 
 type Township {
@@ -194,6 +220,11 @@ type Township {
   name: String!
   pickup_cost: Float!
   zipcode: String!
+}
+
+type TownshipRevenue {
+  revenue: Float!
+  township: String!
 }
 
 type TwoFactorResponse {

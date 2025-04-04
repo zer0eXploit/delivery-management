@@ -1,7 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  ForbiddenException,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { GqlExecutionContext } from '@nestjs/graphql';
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 
 import Constants from '../constants';
 import { Role } from '../enums/role.enum';
@@ -22,6 +27,12 @@ export class RolesGuard implements CanActivate {
     const ctx = GqlExecutionContext.create(context).getContext();
     const { user } = ctx.req;
 
-    return requiredRoles.some((role) => user.role === role);
+    const exists = requiredRoles.some((role) => user.role === role);
+
+    if (exists) return true;
+
+    throw new ForbiddenException(
+      `Only ${requiredRoles.join(', ')} can access this resource`,
+    );
   }
 }

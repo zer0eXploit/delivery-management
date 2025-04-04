@@ -15,6 +15,7 @@ import { TelegramModule } from './telegram/telegram.module';
 import { PaymentsModule } from './payments/payments.module';
 import { AddressesModule } from './addresses/addresses.module';
 import { TownshipsModule } from './townships/townships.module';
+import { AnalyticsModule } from './analytics/analytics.module';
 import { TwoFactorModule } from './auth/two-factor/two-factor.module';
 import { DeliveryPersonsModule } from './delivery-persons/delivery-persons.module';
 import { DeliveryRequestsModule } from './delivery-requests/delivery-requests.module';
@@ -80,6 +81,7 @@ import { RequestLoggerMiddleware } from './logger.middleware';
     WebhookModule,
     TelegramModule,
     PaymentsModule,
+    AnalyticsModule,
     AddressesModule,
     TwoFactorModule,
     TownshipsModule,
